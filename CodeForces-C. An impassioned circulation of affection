@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0);
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pdd pair<db, db>
+#define vi vector<ll>
+
+
+
+int main(){
+    int n; cin >> n;
+    string s; cin >> s;
+    vector<int> a(26);
+    for (int i = 0; i < n; i++){
+        a[s[i]-'a']++;
+    }
+    int q; cin >> q;
+    for (int i = 0; i < q; i++){
+        int m; char c; cin >> m >> c;
+        if (!a[c-'a']){
+            cout << min(m, n) << '\n';
+        }else if (a[c-'a'] == 1){
+            cout << min(m+1, n) << '\n';
+        }else{
+            int l = 0, cur = 0;
+            int ans = 0;
+            for (int r = 0; r < n; r++){
+                if (s[r] == c){
+                    cur++;
+                }
+                while (r-l+1-cur > m){
+                    if (s[l] == c){
+                        cur--;
+                    }
+                    l++;
+                }
+                ans = max(ans, r-l+1);
+            }
+            cout << ans << '\n';
+        }
+    }
+    return 0;
+}
