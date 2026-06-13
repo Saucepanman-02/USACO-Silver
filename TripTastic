@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0)
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pll pair<ll, ll>
+#define pdd pair<db, db>
+#define vi vector<int>
+#define EPS 1e-5
+#define MAXD 12
+
+int n, m, k;
+vector<vi> a;
+vector<vector<ll>> pref;
+
+int check(int x, int y, int d){
+    ll sum = 0;
+    int lx = max(x-d, 0), ly = max(y-d, 0);
+    int hx = min(x+d, n-1), hy = min(y+d, m-1);
+    hx++, hy++;
+    sum = pref[hx][hy]-pref[hx][ly]-pref[lx][hy]+pref[lx][ly];
+    return sum >= (k+1);
+}
+
+int c;
+
+int solve(int d){
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < m; j++){
+            if (a[i][j] > 0 && check(i, j, d)){
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+
+int main(){
+    speedup
+    int t; cin >> t;
+    while (t--){
+        cin >> n >> m >> k;
+        a.resize(n, vector<int>(m));
+        pref.resize(n+1, vector<ll>(m+1, 0));
+        ll sum = 0;
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < m; j++){
+                cin >> a[i][j];
+                sum += a[i][j];
+            }
+        }
+        for (int i = 1; i <= n; i++){
+            for (int j = 1; j <= m; j++){
+                pref[i][j] = pref[i-1][j]+pref[i][j-1]-pref[i-1][j-1]+a[i-1][j-1];
+            }
+        }
+        if (sum < k+1){
+            cout << -1 << '\n';
+        }else{
+            int l = 0, r = max(n, m), ans = -1;
+            while (r >= l){
+                int m = (r+l)/2;
+                if (solve(m)){
+                    r = m-1;
+                    ans = m;
+                }else{
+                    l = m+1;
+                }
+            }
+            cout << ans << '\n';
+        }
+        if (t){
+            a.clear();
+            pref.clear();
+        }
+    }
+    return 0;
+}
