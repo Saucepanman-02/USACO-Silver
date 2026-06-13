@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0)
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pll pair<ll, ll>
+#define pdd pair<db, db>
+#define vi vector<int>
+#define EPS 1e-5
+#define MAXD 12
+
+int n, m;
+vector<pll> a;
+
+int solve(ll d){
+    ll cnt = 0;
+    ll cur = -2*1e18;
+    for (int i = 0; i < m; i++){
+        if (a[i].f - cur >= d){
+            cnt += (a[i].s-a[i].f)/d+1;
+            cur = (ll)((a[i].s-a[i].f)/d)*d+a[i].f;
+        }else if (cur+d <= a[i].s){
+            cnt += (a[i].s-(cur+d))/d+1;
+            cur += (ll)((a[i].s-(cur+d))/d)*d+d;
+        }
+    }
+    return (cnt >= n);
+}
+
+int main(){
+    usopen("socdist");
+    speedup 
+    cin >> n >> m;
+    a.resize(m);
+    for (int i = 0; i < m; i++){
+        cin >> a[i].f >> a[i].s;
+    }
+    sort(a.begin(), a.end());
+    ll l = 1, r = 1e18, ans = 0;
+    while (r >= l){
+        ll m = (r+l)/2;
+        if (solve(m)){
+            l = m+1;
+            ans = m;
+        }else{
+            r=m-1;
+        }
+    }
+    cout << ans << endl;
+    return 0;
+}
