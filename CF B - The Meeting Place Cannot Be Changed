@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0)
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pll pair<ll, ll>
+#define pdd pair<db, db>
+#define vi vector<int>
+#define EPS 1e-7
+#define MAXD 12
+
+int n;
+vi x, v;
+
+bool cmp(pdd &a, pdd &b){
+    if (a.f == b.f){
+        return a.s > b.s;
+    }
+    return a.f < b.f;
+}
+
+bool solve(db t){
+    vector<pdd> a(n);
+    for (int i = 0; i < n; i++){
+        a[i] = {x[i]-v[i]*t, x[i]+v[i]*t};
+    }
+    sort(a.begin(), a.end(), cmp);
+    db cx = a[0].f, cy = a[0].s;
+    for (int i = 1; i < n; i++){
+        if (a[i].f > cy){
+            return false;
+        }
+        cx = max(cx, a[i].f);
+        cy = min(cy, a[i].s);
+    }
+    return cy >= cx;
+}
+
+int main(){
+    speedup
+    cin >> n;
+    x.resize(n), v.resize(n);
+    for (int i = 0; i < n; i++){
+        cin >> x[i];
+    }
+    for (int i = 0; i < n; i++){
+        cin >> v[i];
+    }
+    db l = 0, r = 1e14;
+    while (r-l > EPS){
+        db m = (r+l)/2;
+        if (solve(m)){
+            r = m;
+        }else{
+            l = m;
+        }
+    }
+    printf("%.6f\n", (r+l)/2);
+    return 0;
+}
