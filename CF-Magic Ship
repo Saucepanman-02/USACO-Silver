@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0)
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pll pair<ll, ll>
+#define pdd pair<db, db>
+#define vi vector<int>
+#define EPS 1e-5
+#define MAXD 12
+
+ll xi, yi;
+ll x2, y2, cx, cy;
+ll n;
+string st;
+
+bool solve(ll d){
+    ll dx = xi+(d/n)*cx, dy = yi+(d/n)*cy;
+    for (ll i =  0; i < d%n; i++){
+        if (st[i%n] == 'U'){
+            dy++;
+        }else if (st[i%n] == 'D'){
+            dy--;
+        }else if (st[i%n] == 'L'){
+            dx--;
+        }else{
+            dx++;
+        }
+    }
+    return abs(dx-x2)+abs(dy-y2) <= d;
+}
+
+int main(){
+    speedup
+    cin >> xi >> yi; 
+    cin >> x2 >> y2;
+    cin >> n >> st;
+    cx = 0, cy = 0;
+    for (ll i =  0; i < n; i++){
+        if (st[i%n] == 'U'){
+            cy++;
+        }else if (st[i%n] == 'D'){
+            cy--;
+        }else if (st[i%n] == 'L'){
+            cx--;
+        }else{
+            cx++;
+        }
+    }
+    ll l = 0, r = 1e14, ans = -1;
+    while (r >= l){
+        ll m = (r+l)/2;
+        if (solve(m)){
+            ans = m;
+            r = m-1;
+        }else{
+            l = m+1;
+        }
+    }
+    cout << ans << endl;
+    return 0;
+}
