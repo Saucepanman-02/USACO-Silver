@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0);
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pdd pair<db, db>
+#define vi vector<int>
+#define vll vector<ll>
+
+ll lprefix(vll a, ll c, ll y){
+    ll l = 0, r = a.size()-1, ans = 0;
+    while (r >= l){
+        ll m = (r+l)/2;
+        if (a[m]+(m)*c > y){
+            r = m-1;
+        }else{
+            ans = m;
+            l = m+1;
+        }
+    }
+    return ans;
+}
+
+int main() {
+    speedup
+    int n; cin >> n;
+    vi a(n); vi c(n);
+    for (int i = 0; i < n; i++){
+        cin >> a[i];
+    }
+    int mx = 0;
+    for (int i = 0; i < n; i++){
+        cin >> c[i];
+        mx = max(c[i], mx);
+    }
+    vector<vi> b(mx+1);
+    for (int i = 0; i < n; i++){
+        b[c[i]].push_back(a[i]);
+    }
+    vector<vll> pref(mx+1);
+    int sz;
+    for (int i = 0; i <= mx; i++){
+        sz = b[i].size();
+        if (sz != 0){
+            pref[i].resize(sz+1);
+            for (int j = 1; j <= sz; j++){
+                pref[i][j] = pref[i][j-1]+b[i][j-1];
+            }
+        }
+    }
+    int q; cin >> q;
+    ll sum = 0;
+    vll colour(mx+1);
+    int cs, col; ll xy;
+    for (int i = 0; i < q; i++){
+        cin >> cs >> col >> xy;
+        if (cs == 1){
+            colour[col] += xy;
+            sum += xy;
+        }else{
+            cout << lprefix(pref[col], sum-colour[col], xy) << '\n';
+        }
+    }
+    return 0;
+}
