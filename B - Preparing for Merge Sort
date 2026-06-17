@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0);
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pdd pair<db, db>
+#define vi vector<int>
+
+int c;
+
+int bsearch(vector<pii> &a, int cr){
+    int l = 0, r = c-1, ans = -1;
+    while (r >= l){
+        int m = (r+l)/2;
+        if (a[m].f > cr){
+            l = m+1;
+        }else{
+            r = m-1;
+            ans = m;
+        }
+    }
+    return ans;
+}
+
+int main() {
+    speedup
+    int n; cin >> n;
+    vi a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+    vector<pii> ms;
+    c = 1;
+    vi b(n);
+    ms.push_back({a[0], 0});
+    for (int i = 1; i < n; i++){
+        int cur = bsearch(ms, a[i]);
+        if (cur == -1){
+            b[i] = c;
+            ms.push_back({a[i], c}); c++;
+        }else{
+            b[i] = cur;
+            ms[cur].f = a[i];
+        }
+    }
+    vector<vi> ans(c);
+    for (int i = 0; i < n; i++){
+        ans[b[i]].push_back(a[i]);
+    }
+    for (int i = 0; i < c; i++){
+        for (int r: ans[i]){
+            cout << r << ' ';
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
