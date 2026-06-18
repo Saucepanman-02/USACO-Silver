@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0);
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pdd pair<db, db>
+#define vi vector<int>
+#define vll vector<ll>
+
+int n; db rl;
+vector<pdd> a;
+
+bool cmp(pdd &at, pdd& b){
+    if (at.f == b.f){
+        return abs(at.s) > abs(b.s);
+    }
+    return at.f < b.f;
+}
+
+bool solve(db rd){
+    vector<pdd> r;
+    for (int i = 0; i < n; i++){
+        if (rd >= abs(a[i].s)) {
+            db d = sqrt(rd * rd - a[i].s * a[i].s);
+            r.push_back({max(a[i].f - d, (db) 0), min(a[i].f + d, rl)});
+        }
+    }
+    //sort(r.begin(), r.end(), cmp);
+    if (r.empty()){
+        return false;
+    }
+    db p = 0;
+    for (auto &u: r){
+        if (u.f <= p+1e-18){
+            p = max(p, u.s);
+        }
+    }
+    return ( p >= rl-1e-18);
+}
+
+int main() {
+    speedup
+    cin >> n >> rl;
+    a.resize(n);
+    for (int i = 0; i < n; i++){
+        cin >> a[i].f >> a[i].s;
+    }
+    db l = 0, r = 4*1e10;
+    for (int it = 0; it < 60; it++){
+        db m = (r + l) / 2;
+        if (solve(m)) {
+            r = m;
+        } else {
+            l = m;
+        }
+    }
+    printf("%.5f\n", r);
+    return 0;
+}
