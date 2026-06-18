@@ -1,0 +1,90 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0);
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pdd pair<db, db>
+#define vi vector<int>
+#define vll vector<ll>
+
+vll a;
+int n; ll m;
+
+int lsearch(ll c){
+    int l = 0, r = n-1, ans = n;
+    while (r >= l){
+        int md = (r+l)/2;
+        if (a[md] >= c){
+            ans = md;
+            r = md-1;
+        }else{
+            l = md+1;
+        }
+    }
+    return ans;
+}
+
+bool solve(ll c){
+    ll cnt = 0;
+    for (int i = 0; i < n; i++){
+        ll t = c-a[i];
+        cnt += (n - lsearch(t));
+    }
+    return (cnt >= m);
+}
+
+ll calc(ll c){
+    ll cnt = 0;
+    for (int i = 0; i < n; i++){
+        cnt += (n - lsearch(c - a[i]));
+    }
+    return cnt;
+}
+
+int main() {
+    cin >> n >> m;
+    a.resize(n);
+    for (int i = 0; i < n; i++){
+        cin >> a[i];
+    }
+    sort(a.begin(), a.end());
+    int l = 0, r = 2*1e5+10, ans = 0;
+    while (r >= l){
+        int md = (r+l)/2;
+        int sd = solve(md);
+        if (solve(md)){
+            l = md+1;
+            ans = md;
+        }else{
+            r = md-1;
+        }
+    }
+    vll pref(n+1);
+    for (int i = n-1; i >= 0; i--){
+        pref[i] = pref[i+1]+a[i];
+    }
+    ll cur = calc(ans);
+    if (cur == m){
+        ll fans = 0;
+        for (int i = 0; i < n; i++){
+            fans += (pref[(lsearch(ans-a[i]))]+(n-lsearch(ans-a[i]))*a[i]);
+        }
+        cout << fans << endl;
+        return 0;
+    }
+    ll confirm = calc(ans+1);
+    ll fans = 0; ans++;
+    for (int i = 0; i < n; i++){
+        fans += pref[(lsearch(ans-a[i]))]+(n-lsearch(ans-a[i]))*a[i];
+    }
+    ans--;
+    fans += (m-confirm)*ans;
+    cout << fans << endl;
+    return 0;
+}
