@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0);
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pdd pair<db, db>
+#define vi vector<int>
+#define vll vector<ll>
+
+
+int main(){
+    speedup
+    int n, m, q; cin >> n >> m >> q;
+    vi w(n);
+    for (int i = 0; i < n; i++) {
+        cin >> w[i];
+    }
+    vi a, l;
+    a.resize((1<<(n)));
+    for (int i = 0; i < m; i++) {
+        string st; cin >> st;
+        int c = 0;
+        for (int j = 0; j < n; j++) {
+            if (st[j] == '1')
+                c |= (1 << (j));
+        }
+        a[c]++;
+    }
+    vector<vi> pc((1<<n), vi((1<<n), 0));
+    vector<vi> pref((1<<n), vi(101, 0));
+    for (int i = 0; i < (1<<n); i++) {
+        for (int j = 0; j < (1<<n); j++) {
+            int c = i^j; int cost = 0;
+            for (int k = 0; k < n; k++) {
+                if (!(c & (1<<(k)))) {
+                    cost += w[k];
+                }
+            }
+            pc[i][j] = cost;
+        }
+        for (int j = 0; j < (1<<n); j++) {
+            if (a[j] && pc[i][j] <= 100) {
+                pref[i][pc[i][j]] += a[j];
+            }
+        }
+        for (int j = 1; j < 101; j++) {
+            pref[i][j] += pref[i][j-1];
+        }
+    }
+    for (int i = 0; i < q; i++) {
+        string st; int k; cin >> st >> k;
+        int c = 0;
+        for (int j = 0; j < n; j++) {
+            if (st[j] == '1')
+                c |= (1 << (j));
+        }
+        cout << pref[c][k] << '\n';
+    }
+    return 0;
+}
