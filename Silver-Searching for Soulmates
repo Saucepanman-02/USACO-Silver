@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+#define speedup ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+#define usopen(filename) do{freopen(filename".in", "r", stdin); freopen(filename".out", "w", stdout);}while(0);
+#define f first
+#define s second
+#define ll long long
+#define db double
+#define pii pair<int, int>
+#define pdd pair<db, db>
+#define vi vector<int>
+#define vll vector<ll>
+
+
+ll cur = 1e18;
+
+
+
+int main(){
+    speedup
+    int t; cin >> t;
+    while (t--) {
+        cur = 1e18;
+        ll a, b; cin >> a >> b;
+        ll ans = 0;
+        ll fans = 1e9;
+        while (a != b) {
+            while (a > b) {
+                if (a%2) {
+                    a++;
+                    a = (a >> 1); ans += 2;
+                }else {
+                    a = (a >> 1); ans++;
+                }
+            }
+            while (a < b) {
+                fans = min(fans, b-a+ans);
+                if (b%2) {
+                    b--; ans++;
+                }else {
+                    b = (b >> 1); ans++;
+                }
+            }
+        }
+        cout << min(ans, fans) << '\n';
+    }
+    return 0;
+}
